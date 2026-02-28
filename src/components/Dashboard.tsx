@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Search, RotateCcw, Download, Settings, ChevronDown, X, MessageSquare, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
@@ -28,19 +28,32 @@ const AnnotationCard = ({
   ps?: string;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isDragging = useRef(false);
+
+  const handleToggle = () => {
+    if (!isDragging.current) {
+      setIsExpanded(!isExpanded);
+    }
+  };
 
   return (
     <motion.div 
+      drag
+      dragMomentum={false}
+      onDragStart={() => { isDragging.current = true; }}
+      onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 100); }}
+      whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       className={cn(
-        "absolute z-50 w-64 bg-yellow-100 border-l-4 border-yellow-400 shadow-lg rounded-r-md overflow-hidden font-sans",
+        "absolute w-64 bg-yellow-100 border-l-4 border-yellow-400 shadow-lg rounded-r-md overflow-hidden font-sans cursor-grab",
+        isExpanded ? "z-[100]" : "z-50",
         className
       )}
     >
       <div 
         className="flex items-center justify-between p-2 bg-yellow-200/50 cursor-pointer hover:bg-yellow-200 transition-colors"
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={handleToggle}
       >
         <div className="flex items-center gap-2 text-yellow-800 font-bold text-xs uppercase tracking-wider">
           <MessageSquare size={12} />
@@ -64,9 +77,9 @@ const AnnotationCard = ({
           >
             <div className="p-3 text-sm text-gray-800 space-y-2">
               <p className="font-medium text-gray-900">{title}</p>
-              <p className="leading-relaxed text-gray-700">{content}</p>
+              <p className="leading-relaxed text-gray-700 whitespace-pre-wrap">{content}</p>
               {ps && (
-                <div className="pt-2 mt-2 border-t border-yellow-200/60 text-xs text-gray-500 italic">
+                <div className="pt-2 mt-2 border-t border-yellow-200/60 text-xs text-gray-500 italic whitespace-pre-wrap">
                   PS: {ps}
                 </div>
               )}
@@ -94,7 +107,7 @@ const COUNTY_OPTIONS = ['县区', '功能区'];
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'details' | 'stats'>('stats');
-  const [viewMode, setViewMode] = useState<'detail' | 'summary'>('summary');
+  const [viewMode, setViewMode] = useState<'detail' | 'summary'>('detail');
   const [perspective, setPerspective] = useState<'city' | 'county'>('city');
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
@@ -161,6 +174,16 @@ export default function Dashboard() {
             />
           )}
 
+          {/* Annotation: Equipment Type (Summary) */}
+          {viewMode === 'summary' && (
+            <AnnotationCard 
+              title="装备类型筛选"
+              content={`1. 新增装备类型筛选条件，交互反馈和明细界面一致；
+2. 切换了筛选项后，刷新下方列表装备数量，包括（现有总数、人均配备数量、报废总数、缺口数量）`}
+              className="top-full left-[300px] mt-2 w-80"
+            />
+          )}
+
           <div className="flex items-center gap-4 flex-1 min-w-[300px]">
             {/* Region Filter */}
             <div className="flex items-center gap-3">
@@ -208,12 +231,33 @@ export default function Dashboard() {
           {/* Toggle & Navigation Container */}
           <div className="p-6 border-b border-gray-100 space-y-6 relative">
             
-            {/* Annotation 2: Interaction Feedback */}
+            {/* Annotation 2: Interaction Feedback (Detail) */}
             {viewMode === 'detail' && (
               <AnnotationCard 
                 title="交互说明"
-                content="点击反馈和上方隐藏的两个按钮一致"
-                className="top-20 left-[380px]"
+                content={`1、新增单选按钮组，默认不选中任何一个按钮；
+2、选中任意一个按钮后后下方列表仅展示地市或县区数据（具体反馈沿用上方隐藏的两个按钮一致）`}
+                className="top-20 left-[380px] w-80"
+              />
+            )}
+
+            {/* Annotation: Perspective Logic (Summary) */}
+            {viewMode === 'summary' && (
+              <AnnotationCard 
+                title="视角逻辑说明"
+                content={`1. 【明细和汇总】状态的地市视角和县区不需要联动，【汇总视角】下默认地市视角；可以都不选。
+2. 地市视角：选中时下方提供多选组：市本级、县区、功能区；默认全部选中
+    a. 列表：单位名称仅显示市级单位（和明细的区别是文本不显示“本级”字眼）
+PS:合计行和江西省固定显示不受影响
+    b. 市本级：勾选时，下方市级单位的装备计数需要包括本级数量；包括（现有总数、人均配备数量、报废总数、缺口数量）
+    c. 县区：勾选时，下方市级单位的装备计数需要包括下级的县区数量；
+    d. 功能区：勾选时，下方市级单位的装备计数需要包括下级的功能区数量；功能区列表见需求中的附件
+3. 县区视角：选中时下方提供多选组：县区、功能区；默认全部选中
+    a. 列表：单位名称仅显示县级单位
+PS:合计行和江西省固定显示不受影响
+    b. 县区：勾选时，下方县级单位的装备计数需要包括本级数量；包括（现有总数、人均配备数量、报废总数、缺口数量）
+    c. 功能区：同上`}
+                className="top-20 left-[380px] w-[500px]"
               />
             )}
 
@@ -319,13 +363,32 @@ export default function Dashboard() {
 
           {/* Table Header & Actions */}
           <div className="p-6 pb-0 flex items-center justify-between mb-4 relative">
-            {/* Annotation 3: Calculation Rule */}
+            {/* Annotation 3: Calculation Rule (Detail) */}
             {viewMode === 'detail' && (
               <AnnotationCard 
                 title="计算规则变更"
                 content="列表的字段规则保持不变，但修改缺口数量的计算规则，改为用主要执法岗人数来计算。"
-                ps="原型上会少放一些条件，但实际上除了上述调整其他保持不变。"
+                ps="原型上的列表字段和实际会有差异，但实际只需要改上述调整内容，未提到的保持不变。"
                 className="top-full left-[55%] mt-4"
+              />
+            )}
+
+            {/* Annotation: Per Capita (Summary) */}
+            {viewMode === 'summary' && (
+              <AnnotationCard 
+                title="人均配备计算"
+                content={`1. 按执法人数=现有总数/执法人员数量，结果保留1位小数不补零
+2. 按主要执法岗=现有总数/主要执法岗位人数，结果保留1位小数不补零`}
+                className="left-[450px] top-5 w-80"
+              />
+            )}
+
+            {/* Annotation: Gap Quantity (Summary) */}
+            {viewMode === 'summary' && (
+              <AnnotationCard 
+                title="缺口计算"
+                content="计算缺口时改为用[主要执法岗位人数]计算"
+                className="top-full left-[65%] mt-4"
               />
             )}
 
