@@ -367,8 +367,9 @@ c. 功能区：勾选时，列表显示功能区单位`}
             {viewMode === 'detail' && (
               <AnnotationCard 
                 title="计算规则变更"
-                content="列表的字段规则保持不变，但修改缺口数量的计算规则，改为用主要执法岗人数来计算。"
-                ps="原型上的列表字段和实际会有差异，但实际只需要改上述调整内容，未提到的保持不变。"
+                content={`1.勾选显示人均数：但修改人均数量的计算规则，改为用主要执法岗人数来计算。
+2.勾选配备缺口：修改缺口数量的计算规则，改为用主要执法岗人数来计算。`}
+                ps="原型上的列表字段和实际会有差异，但实际只需要改上述调整内容，未提到的保持不变"
                 className="top-full left-[55%] mt-4"
               />
             )}
@@ -411,21 +412,44 @@ c. 功能区：勾选时，列表显示功能区单位`}
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">单位名称</th>
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">现有总数</th>
-                  <th colSpan={2} className="py-2 px-6 font-semibold border-b border-gray-200 text-center border-l border-r border-gray-200">人均配备数量</th>
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">报废总数</th>
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">缺口数量</th>
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">执法人员数</th>
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">主要执法岗人数</th>
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">备注</th>
-                  <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">操作</th>
-                </tr>
-                <tr className="bg-gray-50 text-sm text-gray-600">
-                  <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">按执法人数</th>
-                  <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">按主要执法岗</th>
-                </tr>
+                {viewMode === 'summary' ? (
+                  // Summary View Header (Existing)
+                  <>
+                    <tr className="bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">单位名称</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">现有总数</th>
+                      <th colSpan={2} className="py-2 px-6 font-semibold border-b border-gray-200 text-center border-l border-r border-gray-200">人均配备数量</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">报废总数</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">缺口数量</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">执法人员数</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">主要执法岗人数</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">备注</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">操作</th>
+                    </tr>
+                    <tr className="bg-gray-50 text-sm text-gray-600">
+                      <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">按执法人数</th>
+                      <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">按主要执法岗</th>
+                    </tr>
+                  </>
+                ) : (
+                  // Detail View Header (New)
+                  <>
+                    <tr className="bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">单位名称</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">执法人员数</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">主要执法岗位人数</th>
+                      <th colSpan={2} className="py-2 px-6 font-semibold border-b border-gray-200 text-center border-l border-r border-gray-200">安全帽</th>
+                      <th colSpan={2} className="py-2 px-6 font-semibold border-b border-gray-200 text-center border-l border-r border-gray-200">合计</th>
+                      <th rowSpan={2} className="py-4 px-6 font-semibold border-b border-gray-200 align-middle">操作</th>
+                    </tr>
+                    <tr className="bg-gray-50 text-sm text-gray-600">
+                      <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">总数</th>
+                      <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">人均</th>
+                      <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">总数</th>
+                      <th className="py-2 px-4 font-medium border-b border-r border-gray-200 text-center text-xs">人均</th>
+                    </tr>
+                  </>
+                )}
               </thead>
               <tbody className="text-sm text-gray-700">
                 {MOCK_DATA.map((row, index) => {
@@ -442,42 +466,81 @@ c. 功能区：勾选时，列表显示功能区单位`}
                     ? row.name.replace('本级', '') 
                     : row.name;
 
-                  return (
-                    <tr 
-                      key={row.id} 
-                      className={cn(
-                        "border-b border-gray-100 hover:bg-blue-50/30 transition-colors",
-                        index === 0 && "bg-gray-50/50 font-medium"
-                      )}
-                    >
-                      <td className="py-4 px-6">{displayName}</td>
-                      <td className="py-4 px-6">{row.currentTotal}</td>
-                      <td className="py-4 px-6 text-center border-r border-gray-100 bg-gray-50/30">{perCapitaTotal}</td>
-                      <td className="py-4 px-6 text-center border-r border-gray-100 bg-gray-50/30">{perCapitaMain}</td>
-                      <td className="py-4 px-6">{row.scrappedTotal}</td>
-                      <td className="py-4 px-6">{row.gapQuantity}</td>
-                      <td className="py-4 px-6">{row.lawEnforcementPersonnel}</td>
-                      <td className="py-4 px-6">{row.mainPostPersonnel}</td>
-                      <td className="py-4 px-6">
-                        {row.remarks === '请输入备注' ? (
-                          <div className="bg-gray-100 text-gray-400 px-2 py-1 rounded text-xs inline-flex items-center gap-2 w-full max-w-[120px] justify-between">
-                            <span>请输入备注</span>
-                            <span>0 / 100</span>
-                          </div>
-                        ) : (
-                          <span className="text-gray-400">{row.remarks}</span>
+                  if (viewMode === 'summary') {
+                    return (
+                      <tr 
+                        key={row.id} 
+                        className={cn(
+                          "border-b border-gray-100 hover:bg-blue-50/30 transition-colors",
+                          index === 0 && "bg-gray-50/50 font-medium"
                         )}
-                      </td>
-                      <td className="py-4 px-6">
-                        {row.id !== 'total' && (
-                          <button className="text-blue-600 hover:text-blue-800 font-medium">
+                      >
+                        <td className="py-4 px-6">{displayName}</td>
+                        <td className="py-4 px-6">{row.currentTotal}</td>
+                        <td className="py-4 px-6 text-center border-r border-gray-100 bg-gray-50/30">{perCapitaTotal}</td>
+                        <td className="py-4 px-6 text-center border-r border-gray-100 bg-gray-50/30">{perCapitaMain}</td>
+                        <td className="py-4 px-6">{row.scrappedTotal}</td>
+                        <td className="py-4 px-6 text-red-600 font-medium">{row.gapQuantity}</td>
+                        <td className="py-4 px-6">{row.lawEnforcementPersonnel}</td>
+                        <td className="py-4 px-6">{row.mainPostPersonnel}</td>
+                        <td className="py-4 px-6">
+                          {row.remarks === '请输入备注' ? (
+                            <div className="bg-gray-100 text-gray-400 px-2 py-1 rounded text-xs inline-flex items-center gap-2 w-full max-w-[120px] justify-between">
+                              <span>请输入备注</span>
+                              <span>0 / 100</span>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">{row.remarks}</span>
+                          )}
+                        </td>
+                        <td className="py-4 px-6">
+                          {row.id !== 'total' && (
+                            <button className="text-blue-600 hover:text-blue-800 font-medium">
+                              查看
+                            </button>
+                          )}
+                          {row.id === 'total' && <span className="text-gray-400">--</span>}
+                        </td>
+                      </tr>
+                    );
+                  } else {
+                    // Detail View Row
+                    // Mock data for Safety Helmet
+                    const safetyHelmetTotal = Math.floor(row.currentTotal * 0.4);
+                    const safetyHelmetAvg = row.mainPostPersonnel > 0 
+                      ? (safetyHelmetTotal / row.mainPostPersonnel).toFixed(1) 
+                      : '0.0';
+                    
+                    // Total Avg based on Main Post Personnel (as per new rule)
+                    const totalAvg = row.mainPostPersonnel > 0 
+                      ? (row.currentTotal / row.mainPostPersonnel).toFixed(1) 
+                      : '0.0';
+
+                    return (
+                      <tr 
+                        key={row.id} 
+                        className={cn(
+                          "border-b border-gray-100 hover:bg-blue-50/30 transition-colors",
+                          index === 0 && "bg-gray-50/50 font-medium"
+                        )}
+                      >
+                        <td className="py-4 px-6">{displayName}</td>
+                        <td className="py-4 px-6">{row.lawEnforcementPersonnel}</td>
+                        <td className="py-4 px-6">{row.mainPostPersonnel}</td>
+                        {/* Safety Helmet Columns */}
+                        <td className="py-4 px-6 text-center">{safetyHelmetTotal}</td>
+                        <td className="py-4 px-6 text-center">{safetyHelmetAvg}</td>
+                        {/* Total Columns */}
+                        <td className="py-4 px-6 text-center">{row.currentTotal}</td>
+                        <td className="py-4 px-6 text-center">{totalAvg}</td>
+                        <td className="py-4 px-6">
+                          <button className="text-blue-600 hover:text-blue-800 font-medium text-xs">
                             查看
                           </button>
-                        )}
-                        {row.id === 'total' && <span className="text-gray-400">--</span>}
-                      </td>
-                    </tr>
-                  );
+                        </td>
+                      </tr>
+                    );
+                  }
                 })}
               </tbody>
             </table>
