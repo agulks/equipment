@@ -393,6 +393,13 @@ c. 功能区：勾选时，列表显示功能区单位`}
               />
             )}
 
+            {/* Annotation: Export Logic (Both Views) */}
+            <AnnotationCard 
+              title="导出说明"
+              content="导出内容与界面保持一致（包括本期调整内容）"
+              className="right-0 top-[-80px] w-64"
+            />
+
             <h2 className="text-lg font-bold text-gray-900">
               本级及下级单位执法必配装备配备情况统计表
             </h2>
