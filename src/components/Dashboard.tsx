@@ -177,9 +177,9 @@ export default function Dashboard() {
           {/* Annotation: Equipment Type (Summary) */}
           {viewMode === 'summary' && (
             <AnnotationCard 
-              title="装备类型筛选"
-              content={`1. 新增装备类型筛选条件，交互反馈和明细界面一致；
-2. 切换了筛选项后，刷新下方列表装备数量，包括（现有总数、人均配备数量、报废总数、缺口数量）`}
+              title="装备类别筛选"
+              content={`1.新增装备类别筛选条件，交互反馈和明细界面一致;
+2.切换了筛选项后，刷新下方列表装备数量，包括(现有总数、人均配备数量、报废总数、缺口数量)`}
               className="top-full left-[300px] mt-2 w-80"
             />
           )}
@@ -203,10 +203,10 @@ export default function Dashboard() {
 
             {/* Equipment Type Filter */}
             <div className="flex items-center gap-3">
-              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">装备类型：</label>
+              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">装备类别：</label>
               <div className="relative w-48">
                 <div className="flex items-center justify-between px-3 py-2 bg-gray-50 border border-gray-200 rounded-md w-full min-h-[38px] cursor-pointer hover:bg-gray-100 transition-colors">
-                  <span className="text-sm text-gray-500">全部类型</span>
+                  <span className="text-sm text-gray-500">全部类别</span>
                   <ChevronDown size={16} className="text-gray-400" />
                 </div>
               </div>
